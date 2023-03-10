@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TestTechnical.Models.TestModel>
+@using TestTechnical.Models;
+
+@{
+    ViewBag.Title = "Search Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var schedule = Model;
+}
+
+<div class="card">
+    <h5 class="card-header">Test Search</h5>
+    <div class="card-body">
+        <form action="@Url.Action("index", "Test")" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="Title">Title:</label>
+                    <input type="text" class="form-control" id="Title" placeholder="Title" name="title" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Category">Category:</label>
+                    <select name="Category" id="Category" class="form-control" required>
+                        <option value="Online Test">Online Test</option>
+                        <option value="Offline Test">Offline Test</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" class="form-control" id="start_date" value="" name="Start_date" placeholder="Start Date" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" class="form-control" id="end_date" value="" name="End_date" placeholder="End Date" required>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row justify-content-end">
+                    <a href="@Url.Action("form_page", "Test")" class="btn btn-success" style="margin-right: 0.5%">Create</a>
+                    <button type="submit" class="btn btn-primary" id="search_data">Search Data</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Test Date</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ 
+                    foreach (var items in schedule) 
+                    { 
+                        <tr>
+                            <td><a class="picker" id="updateForm" href="@Url.Action("form_page", "Test", new {id = items.id, title = items.title, Category = items.Category, Start_date = items.Start_date, Location = items.Location, Description = items.Description})" >@items.title</a></td>
+                            <td>@items.Category</td>
+                            <td>@items.Start_date</td>
+                            @if(items.Location.Contains("http")){
+                                <td><a href="@items.Location">@items.Location</a></td>
+                            }else{
+                                <td>@items.Location</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

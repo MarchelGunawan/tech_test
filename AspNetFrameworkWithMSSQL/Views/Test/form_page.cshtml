@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "form_page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <h5 class="card-header">Test Form Input</h5>
+    <div class="card-body">
+        <input type="text" name="id" id="schedule_id" value="@ViewData["id"]" hidden />
+        <div class="form-group">
+            <label for="title_schedule">Title</label>
+            <input type="text" class="form-control" name="title" id="title_schedule" value="@ViewData["title_schedule"]" required/>
+        </div>
+            <div class="form-group">
+                <label for="category_schedule">Category</label>
+                <select name="category" id="category_schedule" class="form-control" required>
+                    @if (ViewData["Category"] == null)
+                    {
+                        <option value="Online Test">Online Test</option>
+                        <option value="Offline Test">Offline Test</option>
+                    }
+                    else
+                    {
+                        if (ViewData["Category"].ToString() == "Online Test")
+                        {
+                            <option value="Online Test" selected>Online Test</option>
+                            <option value="Offline Test">Offline Test</option>
+                        }
+                        else
+                        {
+                            <option value="Online Test">Online Test</option>
+                            <option value="Offline Test" selected>Offline Test</option>
+                        }
+                    }
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date_test">Test Date</label>
+                <input type="datetime" name="Start_date" id="date_test" value="@ViewData["Date"].ToString()" class="form-control" required/>
+            </div>
+            <div class="form-group">
+                <label for="location_schedule">Location</label>
+                <input type="text" name="Location" id="location_schedule" value="@ViewData["Location"]" class="form-control" required/>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" name="Description" id="description" value="@ViewData["Description"]" class="form-control"/>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button id="delete" class="btn btn-danger">Delete</button>
+            <button id="save" class="btn btn-primary float-right">Save Data</button>
+            <a href="@Url.Action("index", "Test")" class="btn btn-secondary float-right" style="margin-right: 0.5%">Cancel</a>
+        </div>
+</div>
+
+<script>
+    $("#delete").click(function () {
+        var id = $("#schedule_id").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteData", "Test")',
+            data: {
+                id: id
+            },
+            success: function (data) {
+                if (data == true) {
+                    window.location.replace("/Test/");
+                }
+            }
+        })
+    });
+
+    $("#save").click(function () {
+        var id = $("#schedule_id").val();
+        var title = $("#title_schedule").val();
+        var tmp = $("#date_test").val().split("/");
+        var location = $("#location_schedule").val();
+        var desription = $("#description").val();
+        var category = $("#category_schedule").val();
+        var testdate = tmp[2] + "-" + tmp[1] + "-" + tmp[0];
+        console.log(testdate)
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveorUpdate", "Test")',
+            data: {
+                id: id,
+                title: title,
+                Start_date: testdate,
+                Location: location,
+                Category: category,
+                Description: desription
+            },
+            success: function (data) {
+                if (data == true) {
+                    window.location.replace("/Test/");
+                }
+            }
+        })
+    });
+</script>
+
